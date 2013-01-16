@@ -7,6 +7,7 @@
     <script type="text/javascript" src="/static/less.js"></script>
     <script type="text/javascript" src="/static/jquery.js"></script>
     <script type="text/javascript" src="/static/underscore.js"></script>
+    <script type="text/javascript" src="/static/mustache.js"></script>
     <script type="text/javascript" src="/static/index.js"></script>
 </head>
 <body>
@@ -14,12 +15,18 @@
         <div id="scene-screen">
             <div id="question"></div>
             <input id="input" type="text" /><br />
-            <div id="letters"></div>
+            <div id="letters">
+                <!-- This area will fill by JavaScript -->
+            </div>
         </div>
         <div id="scene-buttons">
             <button id="next">Next</button>
             <button id="skip">Skip</button>
         </div>
     </div>
+
+    <script id="tpl-letters" type="text/template">
+        {{#.}}<span data-letter="{{.}}">{{.}}</span>{{/.}}
+    </script>
 </body>
 </html>

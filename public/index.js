@@ -12,6 +12,8 @@ $(function(){
         uiSkip: $("#skip"),
         uiLetters: $("#letters"),
 
+        tplLetters: $("#tpl-letters").html(),
+
         init: function() {
             var self = this;
             this.dictionary = this.getDictionary();
@@ -76,11 +78,22 @@ $(function(){
             } else {
                 this.uiQuestion.text(item.ru);
                 this.uiInput.attr("data-answer", item.en);
-                this.uiLetters.text(_.shuffle(item.en.split("")).join());
+                this.setLetters(item.en);
                 this.uiNext.hide();
                 this.uiSkip.show();
                 this.uiInput.focus();
             }
+        },
+
+        /**
+         * Функция принимает слово на иностранном языке, перемешивает его буквы
+         * и прокидывая через шаблон отрисовывает его на странице.
+         * @param {string} word Слово (фраза) на иностранном языке.
+         */
+        setLetters: function(word) {
+            var template = this.tplLetters;
+            var context = _.shuffle(word.split(""));
+            this.uiLetters.html(Mustache.render(template, context));
         },
 
         getNextItemFromDictionary: function() {
