@@ -13,10 +13,14 @@
 <body>
     <div id="scene">
         <div id="scene-screen">
-            <div id="question"></div>
-            <input id="input" type="text" /><br />
+            <div id="question">
+                <!-- This area will be filled by JavaScript -->
+            </div>
+            <div id="input">
+                <!-- This area will be filled by JavaScript -->
+            </div>
             <div id="letters">
-                <!-- This area will fill by JavaScript -->
+                <!-- This area will be filled by JavaScript -->
             </div>
         </div>
         <div id="scene-buttons">
@@ -24,6 +28,10 @@
             <button id="skip">Skip</button>
         </div>
     </div>
+
+    <script id="tpl-input" type="text/template">
+        {{#.}}<span data-letter="{{.}}"></span>{{/.}}
+    </script>
 
     <script id="tpl-letters" type="text/template">
         {{#.}}<span data-letter="{{.}}">{{.}}</span>{{/.}}

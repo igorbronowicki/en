@@ -13,41 +13,30 @@ $(function(){
         uiLetters: $("#letters"),
 
         tplLetters: $("#tpl-letters").html(),
+        tplInput: $("#tpl-input").html(),
+
+        // Current state
+        current: {
+            question: undefined,
+            input: undefined,
+            answer: undefined,
+            letters: undefined,
+            position: undefined
+        },
 
         init: function() {
             var self = this;
             this.dictionary = this.getDictionary();
-            this.uiInput.bind('change', function() {
-                $(this).removeClass("invalid").removeClass("valid");
-                if ($(this).val() === $(this).attr("data-answer")) {
-                    $(this).addClass("valid");
-                    self.uiNext.show();
-                    self.uiSkip.hide();
-                } else {
-                    $(this).addClass("invalid");
-                    self.uiNext.hide();
-                    self.uiSkip.show();
-                }
-            });
+
             this.uiSkip.bind("click", function() {
-                self.uiInput.val(self.uiInput.attr("data-answer"));
-                self.uiNext.show();
-                self.uiSkip.hide();
+                self.setFinishScene();
             });
+
             this.uiNext.bind("click", function() {
-                self.resetScene();
-                self.setScene();
+                self.getNextItemFromDictionary();
             });
-            this.setScene();
-        },
 
-        resetScene: function() {
-            this.uiInput.removeClass("invalid").removeClass("valid");
-            this.uiInput.val("");
-        },
-
-        deleteScene: function() {
-            this.uiScene.text("There are no items in dictionary!");
+            this.getNextItemFromDictionary();
         },
 
         getDictionary: function() {
@@ -71,33 +60,83 @@ $(function(){
             ];
         },
 
-        setScene: function() {
-            var item = this.getNextItemFromDictionary();
-            if (item === undefined) {
-                this.deleteScene();
-            } else {
-                this.uiQuestion.text(item.ru);
-                this.uiInput.attr("data-answer", item.en);
-                this.setLetters(item.en);
-                this.uiNext.hide();
-                this.uiSkip.show();
-                this.uiInput.focus();
-            }
+        setFinishScene: function() {
+            this.setAnswer();
+            this.uiLetters.hide();
+            this.uiNext.show();
+            this.uiSkip.hide();
         },
 
-        /**
-         * Функция принимает слово на иностранном языке, перемешивает его буквы
-         * и прокидывая через шаблон отрисовывает его на странице.
-         * @param {string} word Слово (фраза) на иностранном языке.
-         */
-        setLetters: function(word) {
+        setStartScene: function() {
+            this.uiQuestion.text(this.current.question);
+            this.setInput();
+            this.setLetters();
+            this.uiLetters.show();
+            this.uiNext.hide();
+            this.uiSkip.show();
+        },
+
+        deleteScene: function() {
+            this.uiScene.text("There are no items in dictionary!");
+        },
+
+        setLetters: function() {
+            var self = this;
+
             var template = this.tplLetters;
-            var context = _.shuffle(word.split(""));
+            var context = this.current.letters.split("");
             this.uiLetters.html(Mustache.render(template, context));
+
+            $("#letters span").bind("click", function() {
+                var el = this;
+                var letter = $(this).attr("data-letter");
+                if (self.checkLetter(letter)) {                 // Проверка буквы
+                    $(this).remove();                           // Удаляем кубик
+                    self.openLetter();                          // Открываем одну букву
+                } else {
+                    $(this).addClass("wrong");
+                    setTimeout(function() {
+                        $(el).removeClass("wrong");
+                    }, 400);
+                }
+            });
+        },
+
+        setInput: function() {
+            var template = this.tplInput;
+            var context = this.current.answer.split("");
+            this.uiInput.html(Mustache.render(template, context));
+        },
+
+        setAnswer: function() {
+            $("#input span").each(function(i, e) {
+                $(e).text($(e).attr("data-letter")).addClass("correct");
+            });
+        },
+
+        checkLetter: function(letter) {
+            return this.current.answer[this.current.position] === letter ? true: false;
+        },
+
+        openLetter: function() {
+            $($("#input span")[this.current.position]).text($($("#input span")[this.current.position]).attr("data-letter")).addClass("correct");
+            this.current.position++;
         },
 
         getNextItemFromDictionary: function() {
-            return this.dictionary.pop();
+            var item = this.dictionary.pop();
+            if (item === undefined) {
+                this.deleteScene();
+            } else {
+                this.current = {
+                    question: item.ru,
+                    input: "",
+                    answer: item.en,
+                    letters: _.shuffle(item.en.split("")).join(""),
+                    position: 0
+                }
+                this.setStartScene();
+            }
         }
     }
     app.init();

@@ -33,6 +33,48 @@ body {
             margin: 9px 0 35px;
         }
 
+        #input {
+
+            > span {
+                display: inline-block;
+                width: 35px;
+                height: 35px;
+                background-color: #DDD;
+                border: solid 1px;
+                border-color: #AAA #CCC #CCC #AAA;
+                margin: 4px 2px;
+                font-size: 25px;
+                font-weight: bold;
+                color: white;
+                line-height: 31px;
+                overflow: hidden;
+                text-shadow: none;
+                vertical-align: middle;
+                cursor: auto;
+                text-decoration: none;
+                border-radius: 3px;
+
+                &.correct {
+                    border-color: #AEF691 #5FCA40 #46BF21 #9FF57A;
+                    background: #92F366;
+                    background: -webkit-gradient(linear,0 0,0 100%,from(#BDF8A9),to(#92F366));
+                    background: -moz-linear-gradient(top,#BDF8A9,#92F366);
+                    background: -o-linear-gradient(top,#BDF8A9,#92F366);
+                    color: #1A6608;
+                    text-shadow: 0 0 transparent, 0 1px 0 rgba(211, 244, 204, 0.99);
+                }
+
+                &.wrong {
+                    background: #FF5B47;
+                    background: -webkit-gradient(linear,0 0,0 100%,from(#FF9A8B),to(#FF5B47));
+                    background: -moz-linear-gradient(top,#FF9A8B,#FF5B47);
+                    background: -o-linear-gradient(top,#FF9A8B,#FF5B47);
+                    border-color: #FF8271 #CA3D2C #BD2917 #FF6E5B;
+                    text-shadow: 0 0 transparent, 0 1px 0 rgba(255, 181, 181, 0.99);
+                }
+            }
+        }
+
         input {
             &.invalid {
                 background: #ff8d7d;
@@ -64,6 +106,15 @@ body {
                 cursor: pointer;
                 border-radius: 3px;
                 font-family: Arial, sans-serif;
+
+                &.wrong {
+                    background: #FF5B47;
+                    background: -webkit-gradient(linear,0 0,0 100%,from(#FF9A8B),to(#FF5B47));
+                    background: -moz-linear-gradient(top,#FF9A8B,#FF5B47);
+                    background: -o-linear-gradient(top,#FF9A8B,#FF5B47);
+                    border-color: #FF8271 #CA3D2C #BD2917 #FF6E5B;
+                    text-shadow: 0 0 transparent, 0 1px 0 rgba(255, 181, 181, 0.99);
+                }
             }
         }
     }
@@ -83,6 +134,7 @@ body {
             border: 1px solid;
             border-color: #3F69A9 #3F69A9 #325386 !important;
             box-shadow: 0px 1px 0 rgba(34, 57, 91, 0.3), 0 2px 1px -2px rgba(255, 255, 255, 0.5);
+            cursor: pointer;
         }
     }
 }
