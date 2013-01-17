@@ -47,26 +47,24 @@ $(function(){
                     } else {
                         self.setFinishScene();
                     }
-                } else {
-                    if (_.include(set, letter)) {
-                        if (self.checkLetter(letter)) {                 // Проверка буквы
-                            //$(this).remove();                           // Удаляем кубик
-                            self.openLetter();                          // Открываем одну букву
-                        } else {
-                            /*
-                            $(this).addClass("wrong");
-                            setTimeout(function() {
-                                $(el).removeClass("wrong");
-                            }, 400);
-                            */
-                        }
+                } else if (_.include(set, letter) && !self.current.finished) {
+                    if (self.checkLetter(letter)) {                                             // Проверка буквы
+                        $($('#letters span[data-letter="'+ letter +'"]')[0]).remove();          // Удаляем кубик
+                        self.openLetter();                                                      // Открываем одну букву
                     } else {
-                        console.log("not try");
+                        self.highlightElement($($("#input span")[self.current.position]));
                     }
                 }
             });
 
             this.getNextItemFromDictionary();
+        },
+
+        highlightElement: function(el) {
+            $(el).addClass("wrong");
+            setTimeout(function() {
+                $(el).removeClass("wrong");
+            }, 400);
         },
 
         getDictionary: function() {
@@ -119,16 +117,12 @@ $(function(){
             this.uiLetters.html(Mustache.render(template, context));
 
             $("#letters span").bind("click", function() {
-                var el = this;
                 var letter = $(this).attr("data-letter");
                 if (self.checkLetter(letter)) {                 // Проверка буквы
                     $(this).remove();                           // Удаляем кубик
                     self.openLetter();                          // Открываем одну букву
                 } else {
-                    $(this).addClass("wrong");
-                    setTimeout(function() {
-                        $(el).removeClass("wrong");
-                    }, 400);
+                    self.highlightElement(this);
                 }
             });
         },
