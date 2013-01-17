@@ -120,7 +120,12 @@ $(function(){
 
         openLetter: function() {
             $($("#input span")[this.current.position]).text($($("#input span")[this.current.position]).attr("data-letter")).addClass("correct");
-            this.current.position++;
+            if (this.current.position === this.current.answer.length-1) {
+                // Это была последняя открытая буква
+                this.setFinishScene();
+            } else {
+                this.current.position++;
+            }
         },
 
         getNextItemFromDictionary: function() {
