@@ -21,7 +21,8 @@ $(function(){
             input: undefined,
             answer: undefined,
             letters: undefined,
-            position: undefined
+            position: undefined,
+            finished: undefined
         },
 
         init: function() {
@@ -34,6 +35,35 @@ $(function(){
 
             this.uiNext.bind("click", function() {
                 self.getNextItemFromDictionary();
+            });
+
+            $(document).keyup(function(event) {
+                var set = "QWERTYUIOPASDFGHJKLZXCVBNM".toLowerCase().split("");
+                var letter = String.fromCharCode(event.which).toLowerCase();
+                if (event.which == 13) {
+                    // Мы нажали Enter
+                    if (self.current.finished) {
+                        self.getNextItemFromDictionary();
+                    } else {
+                        self.setFinishScene();
+                    }
+                } else {
+                    if (_.include(set, letter)) {
+                        if (self.checkLetter(letter)) {                 // Проверка буквы
+                            //$(this).remove();                           // Удаляем кубик
+                            self.openLetter();                          // Открываем одну букву
+                        } else {
+                            /*
+                            $(this).addClass("wrong");
+                            setTimeout(function() {
+                                $(el).removeClass("wrong");
+                            }, 400);
+                            */
+                        }
+                    } else {
+                        console.log("not try");
+                    }
+                }
             });
 
             this.getNextItemFromDictionary();
@@ -65,6 +95,7 @@ $(function(){
             this.uiLetters.hide();
             this.uiNext.show();
             this.uiSkip.hide();
+            this.current.finished = true;
         },
 
         setStartScene: function() {
@@ -121,7 +152,7 @@ $(function(){
         openLetter: function() {
             $($("#input span")[this.current.position]).text($($("#input span")[this.current.position]).attr("data-letter")).addClass("correct");
             if (this.current.position === this.current.answer.length-1) {
-                // Это была последняя открытая буква
+                // Мы только что открыли последнюю букву
                 this.setFinishScene();
             } else {
                 this.current.position++;
@@ -138,7 +169,8 @@ $(function(){
                     input: "",
                     answer: item.en,
                     letters: _.shuffle(item.en.split("")).join(""),
-                    position: 0
+                    position: 0,
+                    finished: false
                 }
                 this.setStartScene();
             }
